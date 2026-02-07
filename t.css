@@ -1,0 +1,186 @@
+body {
+    background-color: #0f0f0f;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+}
+
+.panel {
+    height: 100vh; /* Each section takes full screen height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #333;
+}
+
+.skill-box {
+    display: inline-block;
+    padding: 20px 40px;
+    margin: 10px;
+    background: #222;
+    border: 1px solid #00ff88;
+    color: #00ff88;
+    border-radius: 8px;
+}
+
+/* Update these sections in t.css */
+
+/* Find these in t.css and update them */
+
+.hero h1 {
+    font-size: 5rem;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1;
+    
+    /* Start invisible */
+    opacity: 0; 
+    /* No transform here, GSAP will handle the scale */
+}
+
+.hero p {
+    margin-top: 20px;
+    color: #888;
+    letter-spacing: 2px;
+    
+    /* Start invisible */
+    opacity: 0;
+}
+
+/* === PAGE 3: FIXED WHEEL STYLES === */
+
+.wheel-page {
+    height: 100vh;
+    width: 100%;
+    background-color: #050505;
+    position: relative;
+    display: flex;       /* This centers the wheel on the screen */
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* The text in the middle */
+.wheel-content {
+    position: absolute;
+    z-index: 10;
+    text-align: center;
+    pointer-events: none;
+}
+
+/* The Rotating Ring */
+.orbit {
+    position: relative;
+    width: 500px;  /* Size of the circle */
+    height: 500px;
+    border: 1px dashed #333;
+    border-radius: 50%;
+    
+    /* The Spin Animation */
+    animation: spinRight 20s linear infinite;
+}
+
+/* The Icons - CRITICAL FIX */
+.orbit-item {
+    position: absolute; /* This is what takes them out of the "single line" */
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    
+    /* Center the pivot point */
+    margin-left: -40px; 
+    margin-top: -40px;
+    
+    background: #111;
+    border: 2px solid #00ff88;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 15px rgba(0,255,136,0.2);
+}
+
+.orbit-item img {
+    width: 50%;
+    height: auto;
+    
+    /* Counter-spin the image itself so it stays upright */
+    animation: spinLeft 20s linear infinite;
+}
+
+/* === POSITIONING THE 5 ITEMS === */
+/* We rotate the container, push it out 250px, then rotate the image back */
+
+/* Item 1 (0 degrees) */
+.orbit-item:nth-child(2) { transform: rotate(0deg) translate(250px); }
+
+/* Item 2 (72 degrees) */
+.orbit-item:nth-child(3) { transform: rotate(72deg) translate(250px); }
+
+/* Item 3 (144 degrees) */
+.orbit-item:nth-child(4) { transform: rotate(144deg) translate(250px); }
+
+/* Item 4 (216 degrees) */
+.orbit-item:nth-child(5) { transform: rotate(216deg) translate(250px); }
+
+/* Item 5 (288 degrees) */
+.orbit-item:nth-child(6) { transform: rotate(288deg) translate(250px); }
+
+
+/* === ANIMATIONS === */
+@keyframes spinRight {
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes spinLeft {
+    100% { transform: rotate(-360deg); }
+}
+
+
+/* === CONTACT SECTION === */
+.contact {
+    background-color: #0a0a0a;
+    /* Add a subtle top border to separate it from the project */
+    border-top: 1px solid #222; 
+}
+
+.contact h2 {
+    font-size: 3rem;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.social-links {
+    display: flex;
+    gap: 40px; /* Space between icons */
+}
+
+
+
+/* Ensure the contact section has a dark background so white icons show up */
+.contact {
+    background-color: #0a0a0a; 
+    min-height: 50vh; /* Give it some height */
+    padding-bottom: 50px;
+}
+
+/* Update this section in t.css */
+
+.social-btn {
+    color: #fff;       /* Default color (White) */
+    font-size: 3.5rem; /* Icon size */
+    transition: all 0.3s ease; /* Smooth transition */
+}
+
+/* THE NEW NEON RED HOVER EFFECT */
+/* UPDATED: Subtle Red Glow */
+.social-btn:hover {
+    color: #ff4d4d;  /* A slightly softer red */
+    transform: translateY(-5px); /* Moves up just a little bit */
+    
+    /* Reduced shadow: Single layer, less blur */
+    text-shadow: 0 0 15px rgba(255, 77, 77, 0.6); 
+}
