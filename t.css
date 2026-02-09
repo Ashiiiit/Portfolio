@@ -1,98 +1,81 @@
+/* === 1. GLOBAL RESET === */
 body {
     background-color: #0f0f0f;
     color: white;
     font-family: 'Inter', sans-serif;
     margin: 0;
+    overflow-x: hidden;
 }
 
+h1, h2 { margin: 0; }
+
+/* === 2. HERO SECTION === */
 .panel {
-    height: 100vh; /* Each section takes full screen height */
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     border-bottom: 1px solid #333;
+    position: relative;
+    z-index: 2;
+    background-color: #0f0f0f;
 }
-
-.skill-box {
-    display: inline-block;
-    padding: 20px 40px;
-    margin: 10px;
-    background: #222;
-    border: 1px solid #00ff88;
-    color: #00ff88;
-    border-radius: 8px;
-}
-
-/* Update these sections in t.css */
-
-/* Find these in t.css and update them */
 
 .hero h1 {
     font-size: 5rem;
     text-transform: uppercase;
     text-align: center;
     line-height: 1;
-    
-    /* Start invisible */
     opacity: 0; 
-    /* No transform here, GSAP will handle the scale */
 }
 
 .hero p {
     margin-top: 20px;
     color: #888;
     letter-spacing: 2px;
-    
-    /* Start invisible */
     opacity: 0;
 }
 
-/* === PAGE 3: FIXED WHEEL STYLES === */
-
+/* === 3. SKILLS WHEEL === */
 .wheel-page {
     height: 100vh;
     width: 100%;
     background-color: #050505;
     position: relative;
-    display: flex;       /* This centers the wheel on the screen */
+    display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    border-bottom: 1px solid #222;
 }
 
-/* The text in the middle */
 .wheel-content {
     position: absolute;
     z-index: 10;
-    text-align: center;
     pointer-events: none;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #00ff88;
 }
 
-/* The Rotating Ring */
 .orbit {
     position: relative;
-    width: 500px;  /* Size of the circle */
+    width: 500px;
     height: 500px;
     border: 1px dashed #333;
     border-radius: 50%;
-    
-    /* The Spin Animation */
     animation: spinRight 20s linear infinite;
 }
 
-/* The Icons - CRITICAL FIX */
 .orbit-item {
-    position: absolute; /* This is what takes them out of the "single line" */
+    position: absolute;
     top: 50%;
     left: 50%;
     width: 80px;
     height: 80px;
-    
-    /* Center the pivot point */
     margin-left: -40px; 
     margin-top: -40px;
-    
     background: #111;
     border: 2px solid #00ff88;
     border-radius: 50%;
@@ -104,83 +87,137 @@ body {
 
 .orbit-item img {
     width: 50%;
-    height: auto;
-    
-    /* Counter-spin the image itself so it stays upright */
     animation: spinLeft 20s linear infinite;
 }
 
-/* === POSITIONING THE 5 ITEMS === */
-/* We rotate the container, push it out 250px, then rotate the image back */
+/* Skills Positioning */
+.orbit-item:nth-child(1) { transform: rotate(0deg) translate(250px); }
+.orbit-item:nth-child(2) { transform: rotate(72deg) translate(250px); }
+.orbit-item:nth-child(3) { transform: rotate(144deg) translate(250px); }
+.orbit-item:nth-child(4) { transform: rotate(216deg) translate(250px); }
+.orbit-item:nth-child(5) { transform: rotate(288deg) translate(250px); }
 
-/* Item 1 (0 degrees) */
-.orbit-item:nth-child(2) { transform: rotate(0deg) translate(250px); }
-
-/* Item 2 (72 degrees) */
-.orbit-item:nth-child(3) { transform: rotate(72deg) translate(250px); }
-
-/* Item 3 (144 degrees) */
-.orbit-item:nth-child(4) { transform: rotate(144deg) translate(250px); }
-
-/* Item 4 (216 degrees) */
-.orbit-item:nth-child(5) { transform: rotate(216deg) translate(250px); }
-
-/* Item 5 (288 degrees) */
-.orbit-item:nth-child(6) { transform: rotate(288deg) translate(250px); }
+@keyframes spinRight { 100% { transform: rotate(360deg); } }
+@keyframes spinLeft { 100% { transform: rotate(-360deg); } }
 
 
-/* === ANIMATIONS === */
-@keyframes spinRight {
-    100% { transform: rotate(360deg); }
+/* === 4. PROJECTS (ROTATING TILES) === */
+.project-section {
+    height: 100vh;
+    background: #0f0f0f;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
 }
 
-@keyframes spinLeft {
-    100% { transform: rotate(-360deg); }
+.section-title {
+    position: absolute;
+    top: 10%;
+    font-size: 3rem;
+    text-transform: uppercase;
+    color: #fff;
+    z-index: 10;
+}
+
+.carousel-container {
+    position: relative;
+    width: 300px;
+    height: 400px;
+    perspective: 1000px; 
+    margin-top: 50px;
+}
+
+.carousel {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform-style: preserve-3d;
+    animation: spinProjects 20s infinite linear;
+}
+
+/* Pause spinning on hover */
+.carousel-container:hover .carousel {
+    animation-play-state: paused;
+}
+
+.tile {
+    position: absolute;
+    width: 250px;
+    height: 350px;
+    left: 25px;
+    top: 25px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #00ff88;
+    border-radius: 15px;
+    overflow: hidden;
+    -webkit-box-reflect: below 10px linear-gradient(transparent, transparent, rgba(0,0,0,0.4));
+    transition: transform 0.5s, box-shadow 0.5s;
+    cursor: pointer;
+}
+
+.tile img {
+    width: 100%;
+    height: 70%;
+    object-fit: cover;
+    border-bottom: 1px solid #00ff88;
+}
+
+.content {
+    padding: 10px;
+    text-align: center;
+}
+
+.content h3 { margin: 10px 0 5px 0; color: #fff; }
+.content p { margin: 0; color: #00ff88; font-size: 0.9rem; }
+
+.tile:hover {
+    background: rgba(0, 255, 136, 0.1);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+    border-color: #fff;
+}
+
+@keyframes spinProjects {
+    from { transform: rotateY(0deg); }
+    to { transform: rotateY(360deg); }
 }
 
 
-/* === CONTACT SECTION === */
+/* === 5. CONTACT SECTION === */
 .contact {
     background-color: #0a0a0a;
-    /* Add a subtle top border to separate it from the project */
-    border-top: 1px solid #222; 
+    min-height: 50vh;
+    border-top: 1px solid #222;
 }
 
-.contact h2 {
-    font-size: 3rem;
-    margin-bottom: 40px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-.social-links {
-    display: flex;
-    gap: 40px; /* Space between icons */
-}
-
-
-
-/* Ensure the contact section has a dark background so white icons show up */
-.contact {
-    background-color: #0a0a0a; 
-    min-height: 50vh; /* Give it some height */
-    padding-bottom: 50px;
-}
-
-/* Update this section in t.css */
+.social-links { display: flex; gap: 40px; margin-top: 30px; }
 
 .social-btn {
-    color: #fff;       /* Default color (White) */
-    font-size: 3.5rem; /* Icon size */
-    transition: all 0.3s ease; /* Smooth transition */
+    color: #fff;
+    font-size: 3.5rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
 }
 
-/* THE NEW NEON RED HOVER EFFECT */
-/* UPDATED: Subtle Red Glow */
 .social-btn:hover {
-    color: #ff4d4d;  /* A slightly softer red */
-    transform: translateY(-5px); /* Moves up just a little bit */
+    color: #ff4d4d;
+    transform: translateY(-5px);
+    text-shadow: 0 0 15px rgba(255, 77, 77, 0.6);
+}
+
+
+/* === MOBILE FIXES === */
+@media (max-width: 768px) {
+    .hero h1 { font-size: 3rem; }
     
-    /* Reduced shadow: Single layer, less blur */
-    text-shadow: 0 0 15px rgba(255, 77, 77, 0.6); 
+    /* Shrink Skills Wheel */
+    .orbit { width: 300px; height: 300px; }
+    .orbit-item { margin-left: -30px; margin-top: -30px; width: 60px; height: 60px; }
+    .orbit-item:nth-child(1) { transform: rotate(0deg) translate(150px) rotate(0deg); }
+    .orbit-item:nth-child(2) { transform: rotate(72deg) translate(150px) rotate(-72deg); }
+    .orbit-item:nth-child(3) { transform: rotate(144deg) translate(150px) rotate(-144deg); }
+    .orbit-item:nth-child(4) { transform: rotate(216deg) translate(150px) rotate(-216deg); }
+    .orbit-item:nth-child(5) { transform: rotate(288deg) translate(150px) rotate(-288deg); }
 }
