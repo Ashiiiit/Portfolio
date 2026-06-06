@@ -489,7 +489,7 @@ function Hero() {
           transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           className="text-3xl md:text-[3.5rem] lg:text-[4.5rem] font-semibold text-muted-foreground mb-8 tracking-tight leading-[1.1] text-balance"
         >
-          Full-stack developer.<br className="hidden md:inline" />
+          CSE UNDERGRADUATE.<br className="hidden md:inline" />
           <span className="text-foreground">Designed to perform.</span>
         </motion.h2>
 
@@ -499,8 +499,7 @@ function Hero() {
           transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed font-normal tracking-tight"
         >
-          I craft modern, pixel-perfect user interfaces that blend thoughtful 
-          minimalist design with robust backend engineering.
+          
         </motion.p>
 
         <motion.div
@@ -562,19 +561,15 @@ function About() {
 
           <div className="grid md:grid-cols-[1.8fr,1fr] gap-16 md:gap-24">
             <div className="space-y-8">
-              <p className="text-2xl md:text-[2rem] font-semibold text-foreground tracking-tight leading-tight text-balance">
-                I am passionate about crafting <span className="text-primary font-bold">accessible</span>, pixel-perfect user interfaces that seamlessly blend thoughtful design with solid software engineering.
-              </p>
+              
 
               <p className="text-muted-foreground leading-relaxed text-base font-normal tracking-tight">
                 Currently pursuing my Bachelor of Technology in Computer Science at the{" "}
                 <span className="text-foreground font-semibold">Government Engineering College Thrissur</span>{" "}
-                (KTU), I dedicate my focus to building production-grade, highly-scalable web applications.
+                (KTU)
               </p>
 
-              <p className="text-muted-foreground leading-relaxed text-base font-normal tracking-tight">
-                My sweet spot is at the intersection of complex coding and creative design, designing systems that are beautifully responsive and meticulously optimized for speed and accessibility. I have successfully shipped live applications handling hundreds of active users and financial transactions.
-              </p>
+              
             </div>
 
             <div className="space-y-10 border-t border-border/40 pt-8 md:border-t-0 md:pt-0 md:pl-10 md:border-l md:border-border/40">
@@ -1095,7 +1090,7 @@ function Footer() {
             transition={{ duration: 0.6 }}
             className="text-xs text-muted-foreground font-semibold uppercase tracking-wider"
           >
-            © {currentYear} Ashit Debnath. Designed to perform.
+            © {currentYear} Ashit Debnath. 
           </motion.p>
 
           <motion.div
