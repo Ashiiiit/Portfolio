@@ -62,9 +62,7 @@ function ThemeToggle() {
   );
 }
 
-// ==========================================
-// 2. ANTIGRAVITY PARTICLE BACKGROUND
-// ==========================================
+
 interface Particle {
   x: number;
   y: number;
@@ -210,9 +208,7 @@ function AntigravityBackground() {
         ctx.fill();
       }
 
-      // ONLY calculate and draw constellation lines if the user is NOT scrolling and NOT on mobile.
-      // This saves massive processing resources on mobile devices where lines are crowded anyway.
-      // Desktop uses a single batched stroke call which is 100x faster than drawing individually.
+  
       if (!isScrollingRef.current && !isMobile) {
         ctx.beginPath();
         ctx.strokeStyle = isDark ? "rgba(115, 222, 255, 0.08)" : "rgba(2, 132, 199, 0.08)";
@@ -232,7 +228,7 @@ function AntigravityBackground() {
         ctx.stroke();
       }
 
-      // ALWAYS Update and draw particles (so they don't freeze and look laggy during scroll)
+     
       particles.forEach((p) => {
         p.x += p.vx;
         p.y += p.vy;
@@ -316,6 +312,30 @@ function AntigravityBackground() {
   );
 }
 
+
+function ProfessionalBackground() {
+  return (
+    <div className="fixed inset-0 z-0 pointer-events-none bg-background">
+      {/* Subtle Grid Pattern */}
+      <div 
+        className="absolute inset-0 opacity-[0.04] dark:opacity-[0.06]"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, var(--foreground) 1px, transparent 1px),
+            linear-gradient(to bottom, var(--foreground) 1px, transparent 1px)
+          `,
+          backgroundSize: '40px 40px',
+          maskImage: 'radial-gradient(ellipse 80% 50% at 50% 0%, #000 70%, transparent 100%)',
+          WebkitMaskImage: 'radial-gradient(ellipse 80% 50% at 50% 0%, #000 70%, transparent 100%)'
+        }}
+      />
+      {/* Accent Glows */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/20 blur-[120px]" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[120px]" />
+    </div>
+  );
+}
+
 // ==========================================
 // 3. NAVBAR COMPONENT
 // ==========================================
@@ -330,13 +350,32 @@ const navLinks = [
 function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 30);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: "-30% 0px -70% 0px" }
+    );
+
+    const sections = document.querySelectorAll("section[id]");
+    sections.forEach((section) => observer.observe(section));
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      sections.forEach((section) => observer.unobserve(section));
+    };
   }, []);
 
   return (
@@ -363,16 +402,23 @@ function Navbar() {
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-6">
           <ul className="flex items-center gap-6">
-            {navLinks.map((link) => (
-              <li key={link.name}>
-                <a
-                  href={link.href}
-                  className="text-[13px] font-normal text-muted-foreground hover:text-foreground transition-colors duration-200"
-                >
-                  {link.name}
-                </a>
-              </li>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.href.substring(1);
+              return (
+                <li key={link.name}>
+                  <a
+                    href={link.href}
+                    className={`text-[13px] transition-colors duration-300 ${
+                      isActive
+                        ? "font-semibold text-primary"
+                        : "font-medium text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {link.name}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
           {/* Desktop Theme Toggle */}
           <div className="pl-4 border-l border-border/50 flex items-center">
@@ -404,17 +450,24 @@ function Navbar() {
             className="md:hidden bg-background/95 backdrop-blur-xl border-b border-border/40"
           >
             <ul className="flex flex-col px-6 py-4 gap-4">
-              {navLinks.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="block text-sm font-normal text-muted-foreground hover:text-foreground transition-colors duration-200"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
+              {navLinks.map((link) => {
+                const isActive = activeSection === link.href.substring(1);
+                return (
+                  <li key={link.name}>
+                    <a
+                      href={link.href}
+                      className={`block text-sm transition-colors duration-300 ${
+                        isActive
+                          ? "font-semibold text-primary"
+                          : "font-medium text-muted-foreground hover:text-foreground"
+                      }`}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {link.name}
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </motion.div>
         )}
@@ -469,9 +522,7 @@ function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <p className="text-primary font-semibold text-xs tracking-[0.2em] uppercase mb-4">
-            FULL-STACK DEVELOPER
-          </p>
+          
         </motion.div>
 
         <motion.h1
@@ -490,7 +541,7 @@ function Hero() {
           className="text-3xl md:text-[3.5rem] lg:text-[4.5rem] font-semibold text-muted-foreground mb-8 tracking-tight leading-[1.1] text-balance"
         >
           CSE UNDERGRADUATE.<br className="hidden md:inline" />
-          <span className="text-foreground">Designed to perform.</span>
+          
         </motion.h2>
 
         <motion.p
@@ -499,7 +550,7 @@ function Hero() {
           transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed font-normal tracking-tight"
         >
-          
+          I'm a final-year Computer Science & Engineering student graduating in 2027, learning full-stack web development. I focus on building real-life projects.
         </motion.p>
 
         <motion.div
@@ -561,15 +612,19 @@ function About() {
 
           <div className="grid md:grid-cols-[1.8fr,1fr] gap-16 md:gap-24">
             <div className="space-y-8">
-              
+              <p className="text-muted-foreground leading-relaxed text-base font-normal tracking-tight">
+                I am a aspiring developer who tries to create user-centric applications. Trying to create a strong foundation in both frontend design and backend engineering, I enjoy learning useful and implementing real-life projects.
+              </p>
 
               <p className="text-muted-foreground leading-relaxed text-base font-normal tracking-tight">
                 Currently pursuing my Bachelor of Technology in Computer Science at the{" "}
                 <span className="text-foreground font-semibold">Government Engineering College Thrissur</span>{" "}
-                (KTU)
+                (KTU).
               </p>
 
-              
+              <p className="text-muted-foreground leading-relaxed text-base font-normal tracking-tight">
+                Beyond coding, I am constantly exploring, and refining my skills.
+              </p>
             </div>
 
             <div className="space-y-10 border-t border-border/40 pt-8 md:border-t-0 md:pt-0 md:pl-10 md:border-l md:border-border/40">
@@ -673,7 +728,7 @@ function Skills() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: categoryIndex * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="p-5 sm:p-8 bg-card/75 border border-border/40 rounded-3xl hover:border-foreground/10 hover:shadow-[0_8px_30px_rgb(0,0,0,0.02)] dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] transition-all duration-500"
+                className="p-5 sm:p-8 bg-card/75 backdrop-blur-xl border border-border/40 rounded-3xl hover:border-foreground/10 hover:shadow-[0_8px_30px_rgb(0,0,0,0.02)] dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] transition-all duration-500"
               >
                 <h3 className="text-lg font-semibold text-foreground tracking-tight mb-6">
                   {category.title}
@@ -729,13 +784,13 @@ const projects = [
       "Real-time database",
       "Premium animations",
     ],
-    link: "#",
-    github: "https://github.com/Ashiiiit",
+    
+    github: "https://github.com/Ashiiiit/college-marathon",
   },
   {
-    title: "Full-Stack Expense Tracker",
+    title: "Financial Expense Tracker",
     description:
-      "Engineered a comprehensive expense tracking application. The core of the system integrates a highly responsive React.js frontend built with Vite and Tailwind CSS, coupled with a robust Python FastAPI backend. For secure and scalable data persistence, it utilizes an SQLite database.",
+      "Solves personal budgeting challenges by providing clear visual breakdowns of spending habits and tracking recurring expenses in real time.",
     tech: ["React.js", "Vite", "Tailwind CSS", "FastAPI", "Python", "SQLite"],
     highlights: [
       "Responsive React.js Frontend",
@@ -743,8 +798,8 @@ const projects = [
       "Secure SQLite Persistence",
       "Modern UI/UX Design",
     ],
-    link: "#",
-    github: "https://github.com/Ashiiiit",
+    
+    github: "https://github.com/Ashiiiit/mini-projectS6",
   },
 ];
 
@@ -774,7 +829,7 @@ function Projects() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.7, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="group relative bg-card/75 border border-border/40 rounded-3xl p-5 sm:p-8 md:p-12 hover:border-foreground/10 hover:shadow-[0_12px_40px_rgba(0,0,0,0.03)] dark:hover:shadow-[0_12px_40px_rgba(0,0,0,0.2)] transition-all duration-500 overflow-hidden"
+                className="group relative bg-card/75 backdrop-blur-xl border border-border/40 rounded-3xl p-5 sm:p-8 md:p-12 hover:border-foreground/10 hover:shadow-[0_12px_40px_rgba(0,0,0,0.03)] dark:hover:shadow-[0_12px_40px_rgba(0,0,0,0.2)] transition-all duration-500 overflow-hidden"
               >
                 <div className="absolute top-0 right-0 w-80 h-80 bg-primary/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-primary/8 transition-colors duration-500" />
 
@@ -791,13 +846,6 @@ function Projects() {
                       aria-label="View on GitHub"
                     >
                       <Github size={18} />
-                    </a>
-                    <a
-                      href={project.link}
-                      className="p-3 text-muted-foreground hover:text-foreground border border-border/60 hover:border-foreground/35 transition-all bg-transparent rounded-full"
-                      aria-label="View live project"
-                    >
-                      <ExternalLink size={18} />
                     </a>
                   </div>
                 </div>
@@ -857,7 +905,7 @@ const education = [
     degree: "Bachelor of Technology in Computer Science",
     institution: "Government Engineering College Thrissur (KTU)",
     period: "Expected Graduation: 2027",
-    score: "CGPA: 7.07",
+    score: "CGPA: 6.96",
     icon: GraduationCap,
   },
   {
@@ -916,7 +964,7 @@ function Education() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex flex-col xs:flex-row gap-4 xs:gap-6 p-5 sm:p-8 bg-card/75 border border-border/40 rounded-3xl hover:border-foreground/10 hover:shadow-[0_8px_30px_rgba(0,0,0,0.02)] transition-all duration-300"
+                  className="flex flex-col xs:flex-row gap-4 xs:gap-6 p-5 sm:p-8 bg-card/75 backdrop-blur-xl border border-border/40 rounded-3xl hover:border-foreground/10 hover:shadow-[0_8px_30px_rgba(0,0,0,0.02)] transition-all duration-300"
                 >
                   <div className="p-3.5 bg-secondary/50 rounded-2xl h-fit border border-border/50 w-fit mx-auto xs:mx-0">
                     <edu.icon className="w-6 h-6 text-primary" />
@@ -952,7 +1000,7 @@ function Education() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.6, delay: 0.2 + index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                  className="p-5 sm:p-6 bg-card/75 border border-border/40 rounded-3xl hover:border-foreground/10 hover:scale-[1.02] hover:shadow-[0_8px_30px_rgba(0,0,0,0.02)] transition-all duration-500 group"
+                  className="p-5 sm:p-6 bg-card/75 backdrop-blur-xl border border-border/40 rounded-3xl hover:border-foreground/10 hover:scale-[1.02] hover:shadow-[0_8px_30px_rgba(0,0,0,0.02)] transition-all duration-500 group"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="p-2.5 bg-secondary/50 rounded-xl border border-border/50">
@@ -996,7 +1044,7 @@ const contactInfo = [
   },
   {
     label: "Phone",
-    value: "+91 9933286505",
+    value: "call",
     href: "tel:+919933286505",
     icon: Phone,
   },
@@ -1035,13 +1083,13 @@ function Contact() {
             <span className="w-8 h-0.5 bg-primary" />
           </div>
 
-          <h3 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground tracking-tight mb-6 leading-tight max-w-2xl mx-auto text-balance">
-            Let&apos;s build something great.
-          </h3>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground tracking-tight mb-6 leading-tight max-w-2xl mx-auto text-balance">
+            Let&apos;s connect.
+          </h1>
           
           <p className="text-muted-foreground leading-relaxed text-base font-normal tracking-tight mb-16 max-w-lg mx-auto text-balance">
-            Have an exciting opportunity, a project to discuss, or just want to connect? 
-            Feel free to reach out through any of these channels.
+             
+            Feel free to reach out through any of these channels to connect.
           </p>
 
           <div className="grid sm:grid-cols-2 gap-6 text-left">
@@ -1054,7 +1102,7 @@ function Contact() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                className="flex items-center gap-5 p-5 bg-card/75 border border-border/40 rounded-3xl hover:border-foreground/10 hover:bg-secondary/40 transition-all duration-300 group shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:scale-[1.01]"
+                className="flex items-center gap-5 p-5 bg-card/75 backdrop-blur-xl border border-border/40 rounded-3xl hover:border-foreground/10 hover:bg-secondary/40 transition-all duration-300 group shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:scale-[1.01]"
               >
                 <div className="p-3 bg-secondary/50 rounded-2xl border border-border/50 group-hover:bg-primary/10 transition-colors duration-300">
                   <contact.icon className="w-5 h-5 text-primary" />
@@ -1118,12 +1166,12 @@ function Footer() {
               <Linkedin size={16} />
             </a>
             <a
-              href="mailto:ashitdebnath23006@gmail.com"
-              className="p-3 text-muted-foreground hover:text-foreground border border-border/60 hover:border-foreground/35 transition-all bg-transparent rounded-full hover:scale-105"
-              aria-label="Email"
-            >
-              <Mail size={16} />
-            </a>
+  href="mailto:ashitdebnath23006@gmail.com"
+  className="inline-flex items-center justify-center p-3 text-muted-foreground hover:text-foreground border border-border/60 hover:border-foreground/35 transition-all bg-transparent rounded-full hover:scale-105"
+  aria-label="Email"
+>
+  <Mail size={16} />
+</a>
           </motion.div>
         </div>
       </div>
@@ -1178,7 +1226,7 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen bg-transparent overflow-x-hidden selection:bg-primary/30 selection:text-foreground">
-      <AntigravityBackground />
+      <ProfessionalBackground />
       <div className="relative z-10">
         <Navbar />
         <Hero />
